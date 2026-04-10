@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Cashback – Nology</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: #1a202c;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: #718096;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 0.4rem;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #2d3748;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover:not(:disabled) { background: #5a67d8; }
+    button:disabled { background: #a0aec0; cursor: not-allowed; }
+
+    .result-box {
+      margin-top: 1.25rem;
+      background: #ebf8ff;
+      border: 1.5px solid #bee3f8;
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: #2b6cb0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a365d;
+      margin: 0.25rem 0;
+    }
+
+    .result-details {
+      font-size: 0.8rem;
+      color: #4a5568;
+      margin-top: 0.75rem;
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .badge-dobro {
+      display: inline-block;
+      background: #fefcbf;
+      color: #744210;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      margin-top: 0.5rem;
+    }
+
+    .error-box {
+      margin-top: 1rem;
+      background: #fff5f5;
+      border: 1.5px solid #fed7d7;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #c53030;
+      font-size: 0.875rem;
+    }
+
+    /* Histórico */
+    h2 {
+      font-size: 1rem;
+      color: #2d3748;
+      margin-bottom: 1rem;
+    }
+
+    .historico-empty {
+      font-size: 0.875rem;
+      color: #a0aec0;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th {
+      text-align: left;
+      color: #718096;
+      font-weight: 600;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1.5px solid #e2e8f0;
+    }
+
+    td {
+      padding: 0.55rem 0.5rem;
+      color: #2d3748;
+      border-bottom: 1px solid #f7fafc;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .tag-vip {
+      background: #faf5ff;
+      color: #6b46c1;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+    }
+
+    .tag-comum {
+      background: #f0fff4;
+      color: #276749;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+    }
+
+    .loading { opacity: 0.6; font-size: 0.875rem; color: #718096; text-align: center; padding: 0.5rem 0; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+
+    <!-- Calculadora -->
+    <div class="card">
+      <h1>💰 Calculadora de Cashback</h1>
+      <p class="subtitle">Programa de cashback Nology Fintech</p>
+
+      <div class="form-group">
+        <label>Tipo de cliente</label>
+        <select v-model="form.tipo_cliente">
+          <option value="comum">Comum</option>
+          <option value="vip">VIP</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Valor da compra (R$)</label>
+        <input type="number" v-model.number="form.valor_compra" min="0.01" step="0.01" placeholder="Ex: 600.00" />
+      </div>
+
+      <div class="form-group">
+        <label>Desconto (%)</label>
+        <input type="number" v-model.number="form.percentual_desconto" min="0" max="99" step="1" placeholder="0 se não houver desconto" />
+      </div>
+
+      <button @click="calcular" :disabled="loading">
+        {{ loading ? 'Calculando...' : 'Calcular cashback' }}
+      </button>
+
+      <div v-if="erro" class="error-box">{{ erro }}</div>
+
+      <div v-if="resultado" class="result-box">
+        <div class="result-label">Cashback final</div>
+        <div class="result-value">{{ formatBRL(resultado.cashback_final) }}</div>
+        <span v-if="resultado.promocao_dobro_aplicada" class="badge-dobro">🎉 Promoção dobro aplicada!</span>
+        <div class="result-details">
+          <span>Valor com desconto: {{ formatBRL(resultado.valor_final) }}</span>
+          <span>Cashback base (5%): {{ formatBRL(resultado.cashback_base) }}</span>
+          <span v-if="resultado.is_vip">Bônus VIP (+10% sobre base): {{ formatBRL(resultado.cashback_bonus_vip) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico -->
+    <div class="card">
+      <h2>📋 Seu histórico de consultas</h2>
+      <div v-if="loadingHistorico" class="loading">Carregando...</div>
+      <div v-else-if="historico.length === 0" class="historico-empty">Nenhuma consulta ainda.</div>
+      <table v-else>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Compra</th>
+            <th>Cashback</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(c, i) in historico" :key="i">
+            <td><span :class="c.tipo_cliente === 'vip' ? 'tag-vip' : 'tag-comum'">{{ c.tipo_cliente.toUpperCase() }}</span></td>
+            <td>{{ formatBRL(c.valor_compra) }}</td>
+            <td>{{ formatBRL(c.cashback) }}</td>
+            <td>{{ formatData(c.criado_em) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ⚠️ Em produção, substitua pela URL real do backend no Railway
+  const API_URL = window.BACKEND_URL || "http://localhost:8000";
+
+  const { createApp } = Vue;
+
+  createApp({
+    data() {
+      return {
+        form: {
+          tipo_cliente: "comum",
+          valor_compra: null,
+          percentual_desconto: 0,
+        },
+        resultado: null,
+        erro: null,
+        loading: false,
+        historico: [],
+        loadingHistorico: true,
+      };
+    },
+    mounted() {
+      this.carregarHistorico();
+    },
+    methods: {
+      async calcular() {
+        if (!this.form.valor_compra || this.form.valor_compra <= 0) {
+          this.erro = "Informe um valor de compra válido.";
+          return;
+        }
+        this.erro = null;
+        this.resultado = null;
+        this.loading = true;
+        try {
+          const res = await fetch(`${API_URL}/calcular`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.form),
+          });
+          if (!res.ok) throw new Error("Erro na API.");
+          this.resultado = await res.json();
+          await this.carregarHistorico();
+        } catch (e) {
+          this.erro = "Não foi possível conectar à API. Tente novamente.";
+        } finally {
+          this.loading = false;
+        }
+      },
+      async carregarHistorico() {
+        this.loadingHistorico = true;
+        try {
+          const res = await fetch(`${API_URL}/historico`);
+          const data = await res.json();
+          this.historico = data.consultas;
+        } catch {
+          this.historico = [];
+        } finally {
+          this.loadingHistorico = false;
+        }
+      },
+      formatBRL(v) {
+        return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
+      },
+      formatData(iso) {
+        return new Date(iso).toLocaleString("pt-BR");
+      },
+    },
+  }).mount("#app");
+</script>
+</body>
+</html>
