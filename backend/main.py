@@ -23,7 +23,7 @@ def startup():
     init_db()
 
 
-# ── Schemas ──────────────────────────────────────────────────────────────────
+# ── Schemas
 
 class CashbackRequest(BaseModel):
     tipo_cliente: str = Field(..., description="'vip' ou 'comum'")
@@ -38,7 +38,7 @@ class ConsultaHistorico(BaseModel):
     criado_em: str
 
 
-# ── Endpoints ─────────────────────────────────────────────────────────────────
+# ── Endpoints
 
 @app.post("/calcular")
 async def calcular(payload: CashbackRequest, request: Request):

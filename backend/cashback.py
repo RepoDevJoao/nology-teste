@@ -8,7 +8,7 @@
 #
 # Decisão sobre ambiguidade:
 #   O Documento 2 diz "o dobro de cashback" sem especificar se dobra apenas
-#   o base ou o total com bônus VIP. Optei por dobrar o valor final do cashback
+#   o base ou o total com bônus VIP. Eu optei por dobrar o valor final do cashback
 #   (após bônus VIP), pois a comunicação da promoção sugere benefício total ao
 #   cliente. Em um cenário real, validaria essa regra com produto/comercial.
 

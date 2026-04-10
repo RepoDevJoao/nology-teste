@@ -45,6 +45,22 @@ cashback_total = (cashback_base + cashback_vip) * 2  (se valor_final > 500)
 
 ---
 
+## Endpoints da API
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/calcular` | Calcula o cashback e salva a consulta no banco |
+| `GET` | `/historico` | Retorna o histórico de consultas do IP solicitante |
+| `GET` | `/health` | Healthcheck da API |
+
+Para verificar o rastreio por IP diretamente no banco, acesse:
+```
+https://back-end-production-6ef7.up.railway.app/historico
+```
+Cada IP vê apenas suas próprias consultas. O retorno é um JSON com o IP identificado e a lista de consultas realizadas.
+
+---
+
 ## Como rodar localmente
 
 ### Backend
@@ -66,6 +82,6 @@ Abra `frontend/index.html` diretamente no navegador, ou sirva com qualquer servi
 
 O projeto está configurado para deploy no Railway com dois serviços:
 - **backend** – API FastAPI com PostgreSQL
-- **frontend** – Servidor estático
+- **frontend** – Servidor estático Nginx
 
 Configure a variável de ambiente `DATABASE_URL` no serviço de backend com a URL do PostgreSQL provisionado pelo Railway.
