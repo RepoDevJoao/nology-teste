@@ -1,8 +1,11 @@
 FROM nginx:alpine
 
-COPY index.html /usr/share/nginx/html/index.html
+# envsubst já vem no pacote gettext
+RUN apk add --no-cache gettext
 
-# Script de entrypoint que injeta a variável BACKEND_URL no HTML em runtime
+# Copia como template — entrypoint gera o index.html final em runtime
+COPY index.html /usr/share/nginx/html/index.html.tmpl
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
