@@ -14,16 +14,17 @@ Desafio técnico para a vaga de Estagiário de Desenvolvimento na Nology.
 
 ```
 nology-teste/
-├── backend/         # API Python (FastAPI)
+├── backend/
 │   ├── main.py
 │   ├── cashback.py
 │   ├── database.py
 │   ├── requirements.txt
 │   └── Dockerfile
-├── frontend/        # Frontend estático (Vue CDN)
+├── frontend/
 │   ├── index.html
+│   ├── entrypoint.sh
 │   └── Dockerfile
-├── railway.toml
+├── .gitignore
 └── README.md
 ```
 
@@ -57,31 +58,11 @@ Para verificar o rastreio por IP diretamente no banco, acesse:
 ```
 https://back-end-production-6ef7.up.railway.app/historico
 ```
-Cada IP vê apenas suas próprias consultas. O retorno é um JSON com o IP identificado e a lista de consultas realizadas.
+Cada IP vê apenas suas próprias consultas.
 
 ---
 
-## Como rodar localmente
+## App em produção
 
-### Backend
-
-```bash
-cd backend
-pip install -r requirements.txt
-# Configure a variável DATABASE_URL com sua string de conexão PostgreSQL
-uvicorn main:app --reload
-```
-
-### Frontend
-
-Abra `frontend/index.html` diretamente no navegador, ou sirva com qualquer servidor estático.
-
----
-
-## Deploy (Railway)
-
-O projeto está configurado para deploy no Railway com dois serviços:
-- **backend** – API FastAPI com PostgreSQL
-- **frontend** – Servidor estático Nginx
-
-Configure a variável de ambiente `DATABASE_URL` no serviço de backend com a URL do PostgreSQL provisionado pelo Railway.
+- **Frontend:** https://front-end-production-bf50.up.railway.app/
+- **Backend:** https://back-end-production-6ef7.up.railway.app/
